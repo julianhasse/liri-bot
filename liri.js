@@ -100,21 +100,9 @@ ${chalk.red("===================================================================
 4) node liri get-song ${chalk.red("// <title> you can also use (spotify-this | spotify | --s)")}
 5) node liri get-movie ${chalk.red("// <title | more than 2 words surrounded with quotations, eg. 'Star Wars'>")}
 6) node liri get-weather <ARGUMENTS> ${chalk.red("// <City | more than 2 words surrounded with quotations, eg. 'Austin TX'>")}
-7) node liri set-timer <ARGUMENTS>
+7) node liri set-timer <ARGUMENTS> ${chalk.red("// <value in seconds | you can also use (--st)")}
 8) node liri do-what-it-says
 
-Usage:
-
-node liri get-tweets
-  This will return your last 20 tweets that you have tweeted.
-
-node liri get-song "Galway Girl"
-  This will return the song titled Galway Girl and will also give the artist, album, and a URL that
-  will give you a 30 second preview of the song.
-
-node liri movie-this Cinderella
-  This will return a movie with the title Cinderella and give you a quick synopsis of the movie and 
-  a link where there to find out more information about the movie.
 `); // end template string
 } // end help()
 
@@ -245,12 +233,16 @@ function getWeather(input){
       var city = data.observationpoint;
       var wind = data.winddisplay;
       var humidity = data.humidity;
-      log(`If I am wrong dont blame me, I have a guy and weather.service.msn.com. You may have heard of him, his name is Ehpeaeye.
-  Anyways, he told me that in ${city}, they checked the weather there at ${time} their time and here is what they got.
-    The current weather is :
-         Temperature: ${temp}
-            Humidity: ${humidity}
-        Current Wind: ${wind}`)
+      log(`
+      Service provided by Liri-Bot Weather Channel.
+      Checking the weather in ${city} at ${time}. Here is my report:
+      ----------------------- 
+      Temperature: ${temp}° F
+      Humidity: ${humidity}%
+      Current Wind: ${wind}
+      -----------------------
+      
+      `)
     }// end if()
   }); // end weather.find()
 } // end getWeather()
@@ -304,7 +296,6 @@ function writePercentage(p){
   var interval = setInterval(function(){
     currentTime += waitInterval;
     percentWaited = Math.floor((currentTime/waitTime) * 100)
-    // log(`waiting ${currentTime/1000} seconds...`)
     writePercentage(percentWaited);
   }, waitInterval);
 
@@ -314,7 +305,7 @@ function writePercentage(p){
     log("\n\nTime is up! \n\n")
   }, waitTime);
 
-  process.stdout.write("\n\n");
+  process.stdout.write("\n");
   writePercentage(percentWaited);
 
 } // end timer
@@ -328,16 +319,16 @@ function menu(){
     .prompt([
       {
         type: "list",
-        message: "What would you like to do?",
-        choices: ["Check twitter", "Check weather by city", "Set a timer", "Check song information", "Check movie information"],
+        message: "What can I help you with?",
+        choices: ["Check twitter", "Check movie information", "Check song information", "Check weather by city", "Set a timer", "Help"],
         name: "choice"
       } // end questions
     ]) // end inquire.prompt()
     .then(function(response){
-      var rc = response.choice;
-      if(rc === "Check twitter"){
+      var userSelection = response.choice;
+      if (userSelection === "Check twitter"){
         getTweets();
-      }else if(rc === "Check weather by city"){
+      } else if (userSelection === "Check weather by city"){
         console.log("look at weather.");
         inquire
           .prompt([
@@ -351,7 +342,7 @@ function menu(){
             var search = response.search;
             getWeather(search);
           }); // end .then()
-      }else if(rc === "Set a timer"){
+      } else if (userSelection === "Set a timer"){
         inquire
           .prompt([
             {
@@ -364,7 +355,7 @@ function menu(){
             var count = response.count;
             setTimer(count);
           }); // end .then()
-      }else if(rc === "Check info on a song"){
+      } else if (userSelection === "Check info on a song"){
         inquire
           .prompt([
             {
@@ -377,7 +368,9 @@ function menu(){
             var song = response.song;
             getSong(song);
           }) // end .then
-      } else if(rc === "Check info on a movie"){
+      } else if (userSelection === "Help"){
+              help();
+      } else if (userSelection === "Check info on a movie"){
         inquire
           .prompt([
             {
@@ -398,7 +391,7 @@ function menu(){
 
 // Logging Functions
 function logEntry(task, input){
-  fs.appendFile("log.txt", ("****** LIRI's LOG ******\n" + Date() + "\n" + "User activated: " + task + " with value: " + input + "\nEnd of log."));
+  fs.appendFile("log.txt", ("****** LIRI's LOG ******\n" + Date() + "\n" + "User activated: " + task + " with value: " + input + "\nEnd of log.\n\n"));
 } // end logEntry
 
 function log(input){
