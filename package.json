@@ -1,0 +1,19 @@
+{
+  "name": "liri-bot",
+  "version": "1.0.0",
+  "description": "Liri is a speech and text recognition app",
+  "main": "keys.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Julian Hasse",
+  "license": "MIT",
+  "dependencies": {
+    "chalk": "^2.3.0",
+    "inquirer": "^3.3.0",
+    "node-spotify-api": "^1.0.7",
+    "request": "^2.83.0",
+    "twitter": "^1.7.1",
+    "weather-js": "^2.0.0"
+  }
+}

@@ -1,0 +1,26 @@
+-------- Log Entry --------
+Thu Oct 26 2017 10:02:39 GMT-0400 (EDT)
+User used getMovie()
+You have searched for jaws and here is what I have found:
+Jaws (PG) was released in 1975.
+This movie was released in USA in English and featured Roy Scheider, Robert Shaw, Richard Dreyfuss, Lorraine Gary.
+A quick plot of the film is:
+  A giant great white shark arrives on the shores of a New England beach resort and wreaks havoc with bloody attacks on swimmers, until a local sheriff teams up with a marine biologist and an old seafarer to hunt the monster down.
+
+Critic Ratings for Jaws:
+  IMDB: 8.0/10
+  Rotten Tomatoes: 97%
+
+To learn more about this film you can visit 
+  http://www.jaws25.com/
+-------- Log Entry --------
+Thu Oct 26 2017 10:03:22 GMT-0400 (EDT)
+User used getMovie()
+-------- Log Entry --------
+Thu Oct 26 2017 10:04:17 GMT-0400 (EDT)
+User used countTo() to count up to 20
+Here I go...For my awesome math skills, you now owe me a penny for each count. You think programming me was cheap?
+  Let's see here... 
+  Since I did 20 calculations, you now owe me $0.2.
+  I have not been integrated with a credit card machine, Apple Pay, Google Pay, or Venmo API's yet, so I only accept cash.
+  Sorry for the inconvenience.
