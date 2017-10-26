@@ -24,49 +24,29 @@ for (var i = 3; i === input.length; i++) {
 // Commands
 
 switch(action){
-  case "twitter":
   case "get-tweets":
-  case "getTweets":
-  case "myTwitter":
-  case "my-tweets":
     getTweets();
     break;
-  case "getSong":
-  case "getsong":
-  case "spotify":
-  case "song":
-  case "spotifyThis":
-  case "spotifyThisSong":
+  case "get-song":
   case "spotify-this":
-  case "spotify-this-song":
     getSong(value);
     break;
   case "omdb-this":
   case "omdb":
-  case "omdbThis":
-  case "movieThis":
   case "movie-this":
     getMovie(value);
     break;
   case "random":
-  case "randomThis":
   case "random-this":
   case "do-what-it-says":
     random();
     break;
   case "weather":
-  case "getWeather":
-  case "this-weather":
-  case "thisWeather":
-  case "weatherThis":
   case "weather-this":
-  case "weather-get":
   case "get-weather":
     getWeather(value);
     break;
-  case "count":
-  case "countTo":
-  case "countUpTo":
+  case "set-timer-for":
   case "count-to":
     countTo(value);
     break;
@@ -89,35 +69,37 @@ switch(action){
 function help(){
   console.log(
 `
-Help File
----------------------------------------------------------------------------------------------------
+${chalk.white("Welcome to Liri-Bot * This is the online help utility * Version 0.9")}
+${chalk.red("===================================================================================================")}
+Help is available for the topics listed below.
+Additional help for built-in functions and operators is
+available in the online version of the manual. 
+${chalk.white("Type <help> to see this list")}
+
 LIRI is similar to SIRI in the fact that it can find out information for you. You can check songs, 
 movies, define words, check the weather, and check your twitter feed. I will be adding more skills 
 later on. But enjoy your experience with LIRI.
 
-Here is how to use LIRI:
----------------------------------------------------------------------------------------------------
+Commands:
+${chalk.red("===================================================================================================")}
 
-When you run the liri.js file using the console. You just have to type the following into the
-terminal:
+1) node liri.js <ACTION> <ARGUMENTS>
 
-node liri.js <ACTION> <ARGUMENTS>
+The <ACTION> represents the main task and the <ARGUMENTS> are the parameters for that action. 
 
-node liri.js prompt
-node liri.js my-tweets
-node liri.js spotify-this-song <ARGUMENTS>
-node liri.js movie-this <ARGUMENTS>
-node liri.js get-weather <ARGUMENTS>
-node liri.js count-to <ARGUMENTS>
-node liri.js do-what-it-says
+2) node liri.js prompt
+3) node liri.js my-tweets
+4) node liri.js spotify-this-song <ARGUMENTS>
+5) node liri.js movie-this <ARGUMENTS>
+6) node liri.js get-weather <ARGUMENTS>
+7) node liri.js count-to <ARGUMENTS>
+8) node liri.js do-what-it-says
 
 IMPORTANT ---- If you pass in an any arguments that have multple words (eg. Bad Blood or Shawshank 
 Redemption) surround them with quotations (eg. "Bad Blood" or "Shawshank Redemption"). Otherwise
 on the first word will be searched (eg. Bad or Shawshank)
 
-The <ACTION> is what you need LIRI to do, and the <ARGUMENTS> are the parameters that you need to 
-pass to LIRI to get what you are looking for. The <ARGUMENTS> will change determine on what you are
-looking for.
+
 
 Examples:
 
