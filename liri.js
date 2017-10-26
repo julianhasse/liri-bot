@@ -1,16 +1,14 @@
 // Modules
-
-var fs = require("fs");
-var keys = require("./keys.js");
-var Twitter = require("twitter");
-var Spotify = require("node-spotify-api");
-var request = require("request");
-var weather = require("weather-js");
-var inquire = require("inquirer");
+const fs = require("fs");
+const keys = require("./keys.js");
+const Twitter = require("twitter");
+const Spotify = require("node-spotify-api");
+const request = require("request");
+const weather = require("weather-js");
+const inquire = require("inquirer");
 const chalk = require("chalk");
 
 // Init Variables
-
 var input = process.argv;
 var action = input[2];
 var value = input[3];
@@ -22,42 +20,54 @@ for (var i = 3; i === input.length; i++) {
 }
 
 // Commands
-
 switch(action){
   case "get-tweets":
+  case "twitter":
+  case "myTweets":
+  case "--t":
     getTweets();
     break;
   case "get-song":
   case "spotify-this":
+  case "spotify":
+  case "--s":
     getSong(value);
     break;
-  case "omdb-this":
+  case "get-movie":
   case "omdb":
   case "movie-this":
+  case "--mv":
     getMovie(value);
     break;
   case "random":
   case "random-this":
   case "do-what-it-says":
+  case "--r":
     random();
     break;
   case "weather":
   case "weather-this":
   case "get-weather":
+  case "--w":
     getWeather(value);
     break;
-  case "set-timer-for":
-  case "count-to":
-    countTo(value);
+  case "set-timer":
+  case "--st":
+    setTimer(value);
     break;
   case "help":
+  case "--h":
     help();
     break;
   case "about":
+  case "--a":
     about();
     break;
   case "prompt":
-    prompt();
+  case "menu":
+  case "options":
+  case "--m":
+    menu();
     break;
   case "setup":
     setup();
@@ -74,43 +84,35 @@ ${chalk.red("===================================================================
 Help is available for the topics listed below.
 Additional help for built-in functions and operators is
 available in the online version of the manual. 
-${chalk.white("Type <help> to see this list")}
+${chalk.white("Type <node liri help> to see this list")}
 
-LIRI is similar to SIRI in the fact that it can find out information for you. You can check songs, 
-movies, define words, check the weather, and check your twitter feed. I will be adding more skills 
-later on. But enjoy your experience with LIRI.
+LIRI-BOT is an "intelligent assistant" that enables users to enter natural language 
+commands in order to perform several tasks including: spotify's song info, omdb's movies data, 
+check the weather, set a timer and retrieve your twitter feed.
 
-Commands:
+
+${chalk.white("Commands:")}
 ${chalk.red("===================================================================================================")}
 
-1) node liri.js <ACTION> <ARGUMENTS>
+1) node liri <ACTION> <ARGUMENTS> ${chalk.red("// <ACTION> is the main task, <ARGUMENTS> are the parameters for that action.")} 
+2) node liri menu ${chalk.red(" // you can also use (options | prompt | --m)")}
+3) node liri get-tweets ${chalk.red(" // you can also use (twitter | myTweets | --t)")}
+4) node liri get-song ${chalk.red("// <title> you can also use (spotify-this | spotify | --s)")}
+5) node liri get-movie ${chalk.red("// <title | more than 2 words surrounded with quotations, eg. 'Star Wars'>")}
+6) node liri get-weather <ARGUMENTS> ${chalk.red("// <City | more than 2 words surrounded with quotations, eg. 'Austin TX'>")}
+7) node liri set-timer <ARGUMENTS>
+8) node liri do-what-it-says
 
-The <ACTION> represents the main task and the <ARGUMENTS> are the parameters for that action. 
+Usage:
 
-2) node liri.js prompt
-3) node liri.js my-tweets
-4) node liri.js spotify-this-song <ARGUMENTS>
-5) node liri.js movie-this <ARGUMENTS>
-6) node liri.js get-weather <ARGUMENTS>
-7) node liri.js count-to <ARGUMENTS>
-8) node liri.js do-what-it-says
-
-IMPORTANT ---- If you pass in an any arguments that have multple words (eg. Bad Blood or Shawshank 
-Redemption) surround them with quotations (eg. "Bad Blood" or "Shawshank Redemption"). Otherwise
-on the first word will be searched (eg. Bad or Shawshank)
-
-
-
-Examples:
-
-node liri.js get-tweets
+node liri get-tweets
   This will return your last 20 tweets that you have tweeted.
 
-node liri.js spotify-this-song "Galway Girl"
+node liri get-song "Galway Girl"
   This will return the song titled Galway Girl and will also give the artist, album, and a URL that
   will give you a 30 second preview of the song.
 
-node liri.js movie-this Cinderella
+node liri movie-this Cinderella
   This will return a movie with the title Cinderella and give you a quick synopsis of the movie and 
   a link where there to find out more information about the movie.
 `); // end template string
@@ -119,9 +121,9 @@ node liri.js movie-this Cinderella
 function about(){
   console.log(
 `
-${chalk.blue.bold("* Welcome to LIRI BOT *")} 
-${chalk.blue("Version Beta.05")}
-${chalk.blue("by Julian Hasse")}
+${chalk.blue.bold("* Welcome to LIRI BOT Version Beta.05 *")} 
+${chalk.blue("============================================")}
+${chalk.blue.bold("by Julian Hasse")}
 
 
 ${chalk.yellow(" $$ |      $$$$$$| $$$$$$$|  $$$$$$|       $$$$$$$|   $$$$$$| $$$$$$$$|  ")}
@@ -137,10 +139,7 @@ ${chalk.yellow(" |________||______||__|  |__||______|      |_______/  |______/  
 `); // end template string
 } // end about()
 
-function log(input){
-  console.log(chalk.green(input));
-  fs.appendFile("log.txt",(input + `\n`));
-} //end log()
+
 
 function getTweets(){
   fs.appendFile("log.txt", ("-------- Log Entry --------\n" + Date() + "\n" + "User used getTweets()\n"));
@@ -233,7 +232,7 @@ To learn more about this film you can visit
 } // end getMovie()
 
 function getWeather(input){
-  fs.appendFile("log.txt", ("-------- Log Entry --------\n" + Date() + "\n" + "User used getWeather() searching " + input + "\n"));
+  logEntry("getWeather", input);
   var city = input;
   weather.find({search: input, degreeType: "F"}, function(err, result){
     if(err){
@@ -285,43 +284,60 @@ function random(){
   }) // end fs.readFile
 } // end random()
 
-function countTo(input){
-  fs.appendFile("log.txt", ("-------- Log Entry --------\n" + Date() + "\n" + "User used countTo() to count up to " + input + "\nHere I go..."));
-  var target = parseInt(input);
-  if(target > 0){
-    for(i=0; i<target; i++){
-      console.log((i+1));
-    } // end for()
-    var balance = target * 0.01;
-    log(`For my awesome math skills, you now owe me a penny for each count. You think programming me was cheap?
-  Let's see here... 
-  Since I did ${target} calculations, you now owe me $${balance}.
-  I have not been integrated with a credit card machine, Apple Pay, Google Pay, or Venmo API's yet, so I only accept cash.
-  Sorry for the inconvenience.`)
-  } else {
-    log("Please enter a number above 0!")
-  } // if if/else()
-} // end count
+function setTimer(input){
+  logEntry("timer", input);
+
+  var lapse = parseInt(input);
+  var waitTime = (lapse * 1000);
+  var currentTime = 0;
+  var waitInterval = 10;
+  var percentWaited = 0;
+
+  log("Timer for " + input + " seconds is running!")
+
+function writePercentage(p){
+  process.stdout.clearLine();
+  process.stdout.cursorTo(0);
+  process.stdout.write(`waiting ... ${p}%`);
+}
+
+  var interval = setInterval(function(){
+    currentTime += waitInterval;
+    percentWaited = Math.floor((currentTime/waitTime) * 100)
+    // log(`waiting ${currentTime/1000} seconds...`)
+    writePercentage(percentWaited);
+  }, waitInterval);
+
+  setTimeout(function(){
+    clearInterval(interval);
+    writePercentage(100)
+    log("\n\nTime is up! \n\n")
+  }, waitTime);
+
+  process.stdout.write("\n\n");
+  writePercentage(percentWaited);
+
+} // end timer
 
 function setup(){
   console.log("This one is still a work in progress");
 }
 
-function prompt(){
+function menu(){
   inquire
     .prompt([
       {
         type: "list",
         message: "What would you like to do?",
-        choices: ["Look at my tweets", "Check weather somewhere", "Count up to", "Check info on a song", "Check info on a movie"],
+        choices: ["Check twitter", "Check weather by city", "Set a timer", "Check song information", "Check movie information"],
         name: "choice"
       } // end questions
     ]) // end inquire.prompt()
     .then(function(response){
       var rc = response.choice;
-      if(rc === "Look at my tweets"){
+      if(rc === "Check twitter"){
         getTweets();
-      }else if(rc === "Check weather somewhere"){
+      }else if(rc === "Check weather by city"){
         console.log("look at weather.");
         inquire
           .prompt([
@@ -335,18 +351,18 @@ function prompt(){
             var search = response.search;
             getWeather(search);
           }); // end .then()
-      }else if(rc === "Count up to"){
+      }else if(rc === "Set a timer"){
         inquire
           .prompt([
             {
               type: "input",
-              message: "How high should I count?",
+              message: "How many seconds?",
               name: "count"
             } // end questions()
           ]) // end inquire.prompt{}
           .then(function(response){
             var count = response.count;
-            countTo(count);
+            setTimer(count);
           }); // end .then()
       }else if(rc === "Check info on a song"){
         inquire
@@ -375,7 +391,16 @@ function prompt(){
             getMovie(movie);
           }) // end inquire.prompt()
       } else {
-        console.log("I should add this to the the function.")
+        console.log("I should add this to the function.")
       } // end if/else()
     }) // end then()
 } // end prompt()
+
+// Logging Functions
+function logEntry(task, input){
+  fs.appendFile("log.txt", ("****** LIRI's LOG ******\n" + Date() + "\n" + "User activated: " + task + " with value: " + input + "\nEnd of log."));
+} // end logEntry
+
+function log(input){
+  console.log(chalk.green(input));
+} //end log()

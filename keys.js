@@ -1,4 +1,11 @@
-console.log('keys.js is loaded');
+const chalk = require("chalk");
+
+console.log(
+	`
+${chalk.white("Liri-Bot initialized.")} 
+${chalk.red(".....................")}
+	`); // end template string
+
 
 exports.twitterKeys = {
 	consumer_key: 'XfJtRNBPuPsaqkREqBvtQjXu5',
