@@ -175,6 +175,11 @@ To learn more about this film you can visit
 function getWeather(input){
   logEntry("getWeather", input);
 
+  if (input === "undefined undefined"){
+    log("Wrong syntax. Please use 'node liri weather <CITY>'\n");
+    process.exit();
+  } else {
+
   var city = input;
   
   weather.find({search: city, degreeType: "F"}, function(err, result){
@@ -208,6 +213,7 @@ function getWeather(input){
       log("\n");
      }// if()
    }); // weather.find()
+  } 
 } // getWeather()
 
 function random(){
