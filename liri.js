@@ -33,12 +33,12 @@ var spotify = new Spotify(keys.spotifyKeys);
 switch(task){
   case "get-tweets":
   case "twitter":
-  case "myTweets":
+  case "my-tweets":
   case "--t":
     getTweets();
     break;
   case "get-song":
-  case "spotify-this":
+  case "spotify-this-song":
   case "spotify":
   case "--s":
     getSong(value);
@@ -143,8 +143,7 @@ function getMovie(input){
   logEntry("getMovie", input);
   var movie = input;
   if(movie === "undefined undefined"){
-    log("Wrong syntax. Please use 'node liri get-movie <TITLE>'\n");
-    process.exit();
+    var movie = "Mr. Nobody";
   }
   request(`http://www.omdbapi.com/?t=${movie}&y=&plot=short&apikey=40e9cece`, function(err, response, body) {
     if (!err && response.statusCode === 200) {
@@ -205,10 +204,10 @@ function getWeather(input){
       }
       log("      ------------------------------------------------------------")
       log("\n");
-     }// if()
-   }); // weather.find()
+     }
+   }); 
   } 
-} // getWeather()
+} // Weather
 
 function random(){
   fs.readFile("random.txt", "utf8", function(err, data){
@@ -282,7 +281,7 @@ function setup(){
 function help(){
   console.log(
 `
-${chalk.white("Welcome to Liri-Bot * This is the online help utility * Version 0.9")}
+${chalk.white("Welcome to Liri-Bot * This is the online help utility * Version 1.0.9")}
 ${chalk.red("===================================================================================================")}
 Help is available for the topics listed below.
 Additional help for built-in functions and operators is
@@ -297,14 +296,14 @@ check the weather, set a timer and retrieve your twitter feed.
 ${chalk.white("Commands:")}
 ${chalk.red("===================================================================================================")}
 
-1) node liri <ACTION> <ARGUMENTS> ${chalk.red("// <ACTION> is the main task, <ARGUMENTS> are the parameters for that action.")} 
-2) node liri menu ${chalk.red(" // you can also use (options | prompt | --m)")}
-3) node liri get-tweets ${chalk.red(" // you can also use (twitter | myTweets | --t)")}
-4) node liri get-song ${chalk.red("// <title> you can also use (spotify-this | spotify | --s)")}
-5) node liri get-movie ${chalk.red("// <title | more than 2 words surrounded with quotations, eg. 'Star Wars'>")}
-6) node liri get-weather <ARGUMENTS> ${chalk.red("// <City | more than 2 words surrounded with quotations, eg. 'Austin TX'>")}
-7) node liri set-timer <ARGUMENTS> ${chalk.red("// <value in seconds | you can also use (--st)")}
-8) node liri do-what-it-says
+> node liri <ACTION> <ARGUMENTS> ${chalk.red("// <ACTION> is the main task, <ARGUMENTS> are the parameters for that action.")} 
+> node liri menu ${chalk.red(" // you can also use (options | prompt | --m)")}
+> node liri get-tweets ${chalk.red(" // you can also use (twitter | my-tweets | --t)")}
+> node liri get-song ${chalk.red("// <title> you can also use (spotify-this-song | spotify | --s)")}
+> node liri get-movie ${chalk.red("// <title you can also use (movie-this | omdb | --mv)")}
+> node liri get-weather <ARGUMENTS> ${chalk.red("// <City | more than 2 words surrounded with quotations, eg. 'Austin TX'>")}
+> node liri set-timer <ARGUMENTS> ${chalk.red("// <value in seconds | you can also use (--st)")}
+> node liri do-what-it-says ${chalk.red("// will take the text of random.txt and call one of LIRI's commands)")}
 
 `); // console.log()
 } // help()
