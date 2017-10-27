@@ -3,10 +3,11 @@ const fs = require("fs");
 const keys = require("./keys.js");
 const Twitter = require("twitter");
 const Spotify = require("node-spotify-api");
+const chalk = require("chalk");
 const request = require("request");
 const weather = require("weather-js");
 const inquire = require("inquirer");
-const chalk = require("chalk");
+
 
 // ================== Init Variables ===============
 var input = process.argv;
@@ -17,7 +18,7 @@ var feed = new Twitter(keys.twitterKeys);
 var userTwitter = "dummy_mcdummy";
 // Spotify
 var spotify = new Spotify(keys.spotifyKeys);
-// Process arguments
+// Process multiple arguments
 for (var i = 3; i === input.length; i++) {
   value = value + " " + input[i];
 }
@@ -342,7 +343,7 @@ function menu(){
       {
         type: "list",
         message: "What can I help you with?",
-        choices: ["Check twitter", "Check movie information", "Check song information", "Check weather by city", "Set a timer", "Help", "About"],
+        choices: ["Check twitter", "Movie information", "Song information", "Weather information", "Set a timer", "Help", "About", "Exit"],
         name: "choice"
       } // end questions
     ]) // end inquire.prompt()
@@ -350,8 +351,7 @@ function menu(){
       var userSelection = response.choice;
       if (userSelection === "Check twitter"){
         getTweets();
-      } else if (userSelection === "Check weather by city"){
-        console.log("Weather report");
+      } else if (userSelection === "Weather information"){
         inquire
           .prompt([
             {
@@ -377,12 +377,12 @@ function menu(){
             var count = response.count;
             setTimer(count);
           }); // end .then()
-      } else if (userSelection === "Check song information"){
+      } else if (userSelection === "Song information"){
         inquire
           .prompt([
             {
               type: "input",
-              message: "What song should we look up?",
+              message: "Please enter the title:",
               name: "song"
             } // questions{}
           ]) // inquire.menu()
@@ -394,12 +394,15 @@ function menu(){
               help();
       } else if (userSelection === "About"){
               about();
-      } else if (userSelection === "Check movie information"){
+      } else if (userSelection === "Exit"){
+              log("Thank you for using LIRI-BOT.\n")
+              process.exit();
+      } else if (userSelection === "Movie information"){
         inquire
           .prompt([
             {
               type: "input",
-              message: "What movie should we look up?",
+              message: "Please enter the title:",
               name: "movie"
             } // questions()
           ]) // inquire.menu()
@@ -408,7 +411,7 @@ function menu(){
             getMovie(movie);
           }) // inquire.menu()
       } else {
-        console.log("I should add this to the function.")
+        console.log("This option is not available.")
       } // if/else()
     }) // then()
 } // menu()
