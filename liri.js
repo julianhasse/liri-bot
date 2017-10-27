@@ -11,20 +11,26 @@ const inquire = require("inquirer");
 
 // ================== Init Variables ===============
 var input = process.argv;
-var action = input[2];
+// user command
+var task = input[2];
+// single argument
 var value = input[3];
-// Twitter
-var feed = new Twitter(keys.twitterKeys);
-var userTwitter = "dummy_mcdummy";
-// Spotify
-var spotify = new Spotify(keys.spotifyKeys);
 // Process multiple arguments
 for (var i = 3; i === input.length; i++) {
   value = value + " " + input[i];
 }
 
+// ================= Credentials ====================
+// Twitter keys
+var feed = new Twitter(keys.twitterKeys);
+// Twitter user
+var userTwitter = "dummy_mcdummy";
+// Spotify keys
+var spotify = new Spotify(keys.spotifyKeys);
+
+
 // ======================= Commands ===============
-switch(action){
+switch(task){
   case "get-tweets":
   case "twitter":
   case "myTweets":
@@ -81,6 +87,8 @@ switch(action){
 
 //============================== Main Functions ==============================================
 
+
+// ============================= Twitter =====================================================
 function getTweets(){
   logEntry("getTweets", null);
 
@@ -99,15 +107,17 @@ function getTweets(){
       } 
     } 
   }); 
-} // getTweets()
+} // Twitter
 
+// ===================== Spotify ===============================
 function getSong(input){
   logEntry("getSong", input);
   var valType = "track";
   var song = input;
 
-  if(input == null || input === "undefined" || input === "undefined undefined") {
-    song = "The Sign";
+  if(input === "undefined undefined") {
+    log("Wrong syntax. Please use 'node liri get-song <CITY>'\n");
+    process.exit();
   }
 
   spotify.search({ type:valType, query:song}, function(err, data){
@@ -125,11 +135,12 @@ The song ${song} was performed by ${artist}.
 ${artist} released this song on the album "${album}".
 You can listen to ${song} here - ${url}`);
     }
-  }); // end spotify.search()
-} // end spotifySong()
+  }); 
+} // Spotify
 
+// ==================================== OMDB =======================================
 function getMovie(input){
-  fs.appendFile("log.txt", ("-------- Log Entry --------\n" + Date() + "\n" + "User used getMovie()\n"));
+  logEntry("getMovie", input);
   var movie = input;
   if(movie === "undefined undefined"){
     log("Wrong syntax. Please use 'node liri get-movie <TITLE>'\n");
@@ -137,43 +148,24 @@ function getMovie(input){
   }
   request(`http://www.omdbapi.com/?t=${movie}&y=&plot=short&apikey=40e9cece`, function(err, response, body) {
     if (!err && response.statusCode === 200) {
-      var data = JSON.parse(body);
-      var title = data.Title;
-      var year = data.Year;
-      var rated = data.Rated;
-      var ratingLength = data.Ratings.length;
-      console.log(ratingLength);
-      if(ratingLength === 0){
-        var imdbRating = "Sorry this movie is yet to be rated."
-      } else{
-        var imdbRating = data.Ratings[0].Value;
-      }
-      if(ratingLength > 1){
-        var rottenRating = data.Ratings[1].Value;
-      } else {
-        var rottenRating = "We were too lazy to even watch this movie.";
-      }
-      var country = data.Country;
-      var language = data.Language;
-      var plot = data.Plot;
-      var actors = data.Actors;
-      var url = data.Website;
-      log(`You have searched for ${movie} and here is what I have found:
-${title} (${rated}) was released in ${year}.
-This movie was released in ${country} in ${language} and featured ${actors}.
-A quick plot of the film is:
-  ${plot}
 
-Critic Ratings for ${title}:
-  IMDB: ${imdbRating}
-  Rotten Tomatoes: ${rottenRating}
+      log("Title: " + JSON.parse(body).Title);
+      console.log("Release Year: " + JSON.parse(body).Year);
+      console.log("Rated: " + JSON.parse(body).Rated);
+      console.log("Runtime: " + JSON.parse(body).Runtime);
+      console.log("IMDb Rating: " + JSON.parse(body).imdbRating);
+      console.log("Production Country: " + JSON.parse(body).Country);
+      console.log("Language: " + JSON.parse(body).Language);
+      console.log("Director: " + JSON.parse(body).Director);
+      console.log("Actors: " + JSON.parse(body).Actors);
+      console.log("More info: " + JSON.parse(body).Website + "\n");
+      var plot =  JSON.parse(body).Plot;
+      log(`Plot: ${plot}\n`);
+    } 
+  });  
+} // OMDB
 
-To learn more about this film you can visit 
-  ${url}`);
-    } // if()
-  }); // request()
-} // getMovie()
-
+// ======================= Weather ======================================
 function getWeather(input){
   logEntry("getWeather", input);
 
@@ -282,7 +274,7 @@ function writePercentage(p){
 } // end timer
 
 function setup(){
-  console.log("This one is still a work in progress");
+  console.log("Add functionality here");
 }
 
 //============================== Utility Functions ==============================================
