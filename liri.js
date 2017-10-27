@@ -131,8 +131,9 @@ You can listen to ${song} here - ${url}`);
 function getMovie(input){
   fs.appendFile("log.txt", ("-------- Log Entry --------\n" + Date() + "\n" + "User used getMovie()\n"));
   var movie = input;
-  if(movie === undefined){
-    movie = "Mr. Nobody";
+  if(movie === "undefined undefined"){
+    log("Wrong syntax. Please use 'node liri get-movie <TITLE>'\n");
+    process.exit();
   }
   request(`http://www.omdbapi.com/?t=${movie}&y=&plot=short&apikey=40e9cece`, function(err, response, body) {
     if (!err && response.statusCode === 200) {
