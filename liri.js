@@ -424,7 +424,7 @@ function menu(){
       {
         type: "list",
         message: "What can I help you with?",
-        choices: ["Check twitter", "Movie information", "Song information", "Weather information", "Set a timer", "Help", "About", "Exit"],
+        choices: ["Check twitter", "Movie information", "Song information", "Weather information", "Set a timer", "Help", "About"],
         name: "choice"
       } 
     ]) 
@@ -475,9 +475,6 @@ function menu(){
               help();
       } else if (userSelection === "About"){
               about();
-      } else if (userSelection === "Exit"){
-              log("Thank you for using LIRI-BOT.\n")
-              process.exit();
       } else if (userSelection === "Movie information"){
         inquire
           .prompt([
