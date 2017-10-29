@@ -7,6 +7,7 @@ const chalk = require("chalk");
 const request = require("request");
 const weather = require("weather-js");
 const inquire = require("inquirer");
+const exec = require("child_process").exec;
 
 
 // ================== Init Variables ===============
@@ -94,7 +95,7 @@ function getTweets(){
 
   feed.get('statuses/user_timeline', userTwitter, function(err, tweets, response){
     if(err) {
-      console.log(err);
+      console.log("An error has occurred: " + err);
     } 
     if ( response.statusCode === 200 ) {
       for(i = 0; i < tweets.length; i++){
@@ -116,26 +117,52 @@ function getSong(input){
   var song = input;
 
   if(input === "undefined undefined") {
-    log("Wrong syntax. Please use 'node liri get-song <CITY>'\n");
+    log("Wrong syntax. Please use 'node liri get-song <TITLE>'\n");
     process.exit();
   }
 
   spotify.search({ type:valType, query:song}, function(err, data){
     if (err){
-      log("Error Occurred: " + err);
+      log("An error has occurred: " + err);
     } else {
-      var response = data.tracks.items[0];
-      var artist = response.artists[0].name;
-      var title = response.name;
-      var album = response.album.name;
-      var url = response.preview_url;
-      log(`You searched Spotify for: ${song}
----As I scoured the intrawebs, here is what I found---
-The song ${song} was performed by ${artist}.
-${artist} released this song on the album "${album}".
-You can listen to ${song} here - ${url}`);
-    }
-  }); 
+      
+
+      var songInfo = data.tracks.items;
+      var artist = songInfo[0].artists[0].name;
+      var song = songInfo[0].name;
+      var album = songInfo[0].album.name;
+      var previewUrl = songInfo[0].preview_url;
+        
+      log(`
+      ------ Music information provided by Spoyify API -------- 
+
+      Artist:  ${artist}
+      Song:    ${song}
+      Album:   ${album}
+
+      -------------------------------------------------------- 
+      `);
+        inquire
+        .prompt([
+          {
+            type: "confirm",
+            message: "Would you like to hear a sample of the song?[y/n]",
+            name: "sample"
+          } 
+        ])
+        .then(function(response){
+          if (response.sample){
+            exec(`open ${previewUrl}`);
+          } else {
+            log(`
+            Thanks for using Liri-Bot.
+            Bye!\n
+            `);
+            return;
+          }
+        });
+      }
+    }); 
 } // Spotify
 
 // ==================================== OMDB =======================================
@@ -177,7 +204,7 @@ function getWeather(input){
   
   weather.find({search: city, degreeType: "F"}, function(err, result){
     if(err){
-      console.log(err);
+      console.log("An error has occurred: " + err);
     } else {
 
       var data = result[0].current;
@@ -210,33 +237,60 @@ function getWeather(input){
 } // Weather
 
 function random(){
-  fs.readFile("random.txt", "utf8", function(err, data){
-    if(err){
-      log(err);
-    } else{
-      var dataArr = data.split(",");
-      var numRandom = Math.floor(Math.random() * dataArr.length);
-      var keyCheck;
-      var keyRandom;
-      if(numRandom % 2 === 0){
-        keyCheck = true;
-        keyRandom = numRandom;
-      } else {
-        keyCheck = false;
-        keyRandom = numRandom - 1;
-      } // end if/else()
-      var valToKey = keyRandom + 1;
-      // Determine which function this random action wants to run, and then run the respective value
-      if(dataArr[keyRandom] === "spotify-this-song"){
-        getSong(dataArr[valToKey]);
-      } else if(dataArr[keyRandom] === "movie-this"){
-        getMovie(dataArr[valToKey]);
-      } else if(dataArr[keyRandom] === "weather-this"){
-        getWeather(dataArr[valToKey]);
-      } // end if/else()
-    } // end if/else()
-  }) // end fs.readFile
-} // end random()
+  logEntry("random", null);
+  
+  fs.readFile("random.txt", "utf8", function(err, data) {
+    if (err) {
+      console.log("An error has occurred: " + err);
+    } else {
+      
+      splitItems = data.split(",");
+      txtCommand = splitItems[0];
+      txtTitle = splitItems[1];
+
+      spotify.search({ type: "track", query: txtTitle}, function(err, data) {
+        if (err) {
+          console.log("An error has occurred: " + err);
+          return;
+        }
+        var songInfo = data.tracks.items;
+        var artist = songInfo[0].artists[0].name;
+        var song = songInfo[0].name;
+        var album = songInfo[0].album.name;
+        var previewUrl = songInfo[0].preview_url;
+          
+        log(`
+        ------ Music information provided by Spoyify API -------- 
+
+        Artist:  ${artist}
+        Song:    ${song}
+        Album:   ${album}
+
+        -------------------------------------------------------- 
+        `);
+            inquire
+            .prompt([
+              {
+                type: "confirm",
+                message: "Would you like to hear a sample of the song?[y/n]",
+                name: "sample"
+              } 
+            ])
+            .then(function(response){
+              if (response.sample){
+                exec(`open ${previewUrl}`);
+              } else {
+                log(`
+                Thanks for using Liri-Bot.
+                Bye!\n
+                `);
+                return;
+              }
+            });
+          }
+      )}
+  });
+} // random
 
 function setTimer(input){
   logEntry("timer", input);
@@ -272,9 +326,7 @@ function writePercentage(p){
 
 } // end timer
 
-function setup(){
-  console.log("Add functionality here");
-}
+
 
 //============================== Utility Functions ==============================================
 
