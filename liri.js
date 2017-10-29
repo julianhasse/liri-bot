@@ -1,13 +1,15 @@
 // ================= Modules ========================
 const fs = require("fs");
+const exec = require("child_process").exec;
 const keys = require("./keys.js");
+// ================= Dependencies ========================
 const Twitter = require("twitter");
 const Spotify = require("node-spotify-api");
 const chalk = require("chalk");
 const request = require("request");
 const weather = require("weather-js");
 const inquire = require("inquirer");
-const exec = require("child_process").exec;
+
 
 
 // ================== Init Variables ===============
@@ -282,11 +284,11 @@ function random(){
       console.log("An error has occurred: " + err);
     } else {
       
-      splitItems = data.split(",");
-      txtCommand = splitItems[0];
-      txtTitle = splitItems[1];
+      fileEntry = data.split(",");
+      mainCommand = fileEntry[0];
+      songTitle = fileEntry[1];
 
-      spotify.search({ type: "track", query: txtTitle}, function(err, data) {
+      spotify.search({ type: "track", query: songTitle}, function(err, data) {
         if (err) {
           console.log("An error has occurred: " + err);
           return;
