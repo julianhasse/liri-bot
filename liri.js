@@ -175,19 +175,57 @@ function getMovie(input){
   request(`http://www.omdbapi.com/?t=${movie}&y=&plot=short&apikey=40e9cece`, function(err, response, body) {
     if (!err && response.statusCode === 200) {
 
-      log("Title: " + JSON.parse(body).Title);
-      console.log("Release Year: " + JSON.parse(body).Year);
-      console.log("Rated: " + JSON.parse(body).Rated);
-      console.log("Runtime: " + JSON.parse(body).Runtime);
-      console.log("IMDb Rating: " + JSON.parse(body).imdbRating);
-      console.log("Production Country: " + JSON.parse(body).Country);
-      console.log("Language: " + JSON.parse(body).Language);
-      console.log("Director: " + JSON.parse(body).Director);
-      console.log("Actors: " + JSON.parse(body).Actors);
-      console.log("More info: " + JSON.parse(body).Website + "\n");
-      var plot =  JSON.parse(body).Plot;
-      log(`Plot: ${plot}\n`);
+      var movieTitle = JSON.parse(body).Title;
+      var movieYear = JSON.parse(body).Year;
+      var movieRated = JSON.parse(body).Rated;
+      var movieRuntime = JSON.parse(body).Runtime;
+      var movieRating = JSON.parse(body).imdbRating;
+      var movieCountry = JSON.parse(body).Country;
+      var movieLanguage = JSON.parse(body).Language;
+      var movieDirector = JSON.parse(body).Director;
+      var movieCast = JSON.parse(body).Actors;
+      var movieWeb = JSON.parse(body).Website;
+      var moviePlot =  JSON.parse(body).Plot;
+
+
+
+      log(`
+      ---------------- Movie information provided by OMDB API -----------------
+      Title: ${movieTitle}
+      Release Year: ${movieYear}
+      Rated: ${movieRated}
+      Runtime: ${movieRuntime}
+      IMDb Rating: ${movieRating} 
+      Country: ${movieCountry}
+      Language: ${movieLanguage}
+      Director: ${movieDirector}
+      Cast: ${movieCast}
+      More info: ${movieWeb}
+      -------------------------------------------------------------------------`);
+      console.log(`      ${chalk.white("Plot: " + moviePlot)}\n`);
     } 
+
+    inquire
+    .prompt([
+      {
+        type: "confirm",
+        message: "Would you like to visit the movie's website?",
+        name: "sample"
+      } 
+    ])
+    .then(function(response){
+      if (response.sample){
+        exec(`open ${movieWeb}`);
+      } else {
+        log(`
+        Thanks for using Liri-Bot.
+        Bye!\n
+        `);
+        return;
+      }
+    });
+
+
   });  
 } // OMDB
 
@@ -324,8 +362,7 @@ function writePercentage(p){
   process.stdout.write("\n");
   writePercentage(percentWaited);
 
-} // end timer
-
+} // Set timer
 
 
 //============================== Utility Functions ==============================================
@@ -357,8 +394,8 @@ ${chalk.red("===================================================================
 > node liri set-timer <ARGUMENTS> ${chalk.red("// <value in seconds | you can also use (--st)")}
 > node liri do-what-it-says ${chalk.red("// will take the text of random.txt and call one of LIRI's commands)")}
 
-`); // console.log()
-} // help()
+`); // console.log
+} // help
 
 function about(){
   console.log(
@@ -378,8 +415,8 @@ ${chalk.yellow(" $$$$$$$$| $$$$$$| $$ |  $$ |$$$$$$|       $$$$$$$  | $$$$$$  | 
 ${chalk.yellow(" |________||______||__|  |__||______|      |_______/  |______/   |__|    ")}
 
 
-`); // console.log()
-} // about()
+`); // console.log
+} // about
 
 function menu(){
   inquire
@@ -389,8 +426,8 @@ function menu(){
         message: "What can I help you with?",
         choices: ["Check twitter", "Movie information", "Song information", "Weather information", "Set a timer", "Help", "About", "Exit"],
         name: "choice"
-      } // end questions
-    ]) // end inquire.prompt()
+      } 
+    ]) 
     .then(function(response){
       var userSelection = response.choice;
       if (userSelection === "Check twitter"){
@@ -402,12 +439,12 @@ function menu(){
               type: "input",
               message: "Please tell me the city you would like to check",
               name: "search"
-            } // end questions()
-          ]) // end inquire.prompt()
+            } 
+          ]) 
           .then(function(response){
             var search = response.search;
             getWeather(search);
-          }); // end .then()
+          }); 
       } else if (userSelection === "Set a timer"){
         inquire
           .prompt([
@@ -415,12 +452,12 @@ function menu(){
               type: "input",
               message: "How many seconds?",
               name: "count"
-            } // end questions()
-          ]) // end inquire.prompt{}
+            } 
+          ]) 
           .then(function(response){
             var count = response.count;
             setTimer(count);
-          }); // end .then()
+          });
       } else if (userSelection === "Song information"){
         inquire
           .prompt([
@@ -428,12 +465,12 @@ function menu(){
               type: "input",
               message: "Please enter the title:",
               name: "song"
-            } // questions{}
-          ]) // inquire.menu()
+            } 
+          ]) 
           .then(function(response){
             var song = response.song;
             getSong(song);
-          }) // .then
+          }) 
       } else if (userSelection === "Help"){
               help();
       } else if (userSelection === "About"){
@@ -448,17 +485,17 @@ function menu(){
               type: "input",
               message: "Please enter the title:",
               name: "movie"
-            } // questions()
-          ]) // inquire.menu()
+            } 
+          ]) 
           .then(function(response){
             var movie = response.movie;
             getMovie(movie);
-          }) // inquire.menu()
+          }) 
       } else {
         console.log("This option is not available.")
-      } // if/else()
-    }) // then()
-} // menu()
+      } 
+    }) 
+} // menu
 
 
 //============================== Logging Functions ==============================================
