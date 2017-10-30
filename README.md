@@ -5,21 +5,7 @@
                          by Julian Hasse
 
 
- $$ |      $$$$$$| $$$$$$$|  $$$$$$|       $$$$$$$|   $$$$$$| $$$$$$$$|  
- $$ |      |_$$  _|$$  __$$| |_$$  _|      $$  __$$| $$  __$$||__$$  __| 
- $$ |        $$ |  $$ |  $$ |  $$ |        $$ |  $$ |$$ /  $$ |  $$ |    
- $$ |        $$ |  $$$$$$$  |  $$ |        $$$$$$$| |$$ |  $$ |  $$ |    
- $$ |        $$ |  $$  __$$<   $$ |        $$  __$$| $$ |  $$ |  $$ |    
- $$ |        $$ |  $$ |  $$ |  $$ |        $$ |  $$ |$$ |  $$ |  $$ |    
- $$$$$$$$| $$$$$$| $$ |  $$ |$$$$$$|       $$$$$$$  | $$$$$$  |  $$ |    
- |________||______||__|  |__||______|      |_______/  |______/   |__|    
-
-
-
 ===================================================================================================
-Help is available for the topics listed below.
-Additional help for built-in functions and operators is
-available in the online version of the manual. 
 Type <node liri help> to see this list
 
 LIRI-BOT is an "intelligent assistant" that enables users to enter natural language 
