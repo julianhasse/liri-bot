@@ -10,8 +10,6 @@ const request = require("request");
 const weather = require("weather-js");
 const inquire = require("inquirer");
 
-
-
 // ================== Init Variables ===============
 var input = process.argv;
 // user command
@@ -25,66 +23,62 @@ for (var i = 3; i === input.length; i++) {
 
 // ================= Credentials ====================
 // Twitter keys
-var feed = new Twitter(keys.twitterKeys);
+var timeLine = new Twitter(keys.twitterKeys);
 // Twitter user
 var userTwitter = "dummy_mcdummy";
 // Spotify keys
 var spotify = new Spotify(keys.spotifyKeys);
 
-
 // ======================= Commands ===============
 switch(task){
-  case "get-tweets":
-  case "twitter":
-  case "my-tweets":
-  case "--t":
-    getTweets();
-    break;
-  case "get-song":
-  case "spotify-this-song":
-  case "spotify":
-  case "--s":
-    getSong(value);
-    break;
-  case "get-movie":
-  case "omdb":
-  case "movie-this":
-  case "--mv":
-    getMovie(value);
-    break;
-  case "random":
-  case "random-this":
-  case "do-what-it-says":
-  case "--r":
-    random();
-    break;
-  case "weather":
-  case "weather-this":
-  case "get-weather":
-  case "--w":
-    getWeather(value);
-    break;
-  case "set-timer":
-  case "--st":
-    setTimer(value);
-    break;
-  case "help":
-  case "--h":
-    help();
-    break;
-  case "about":
-  case "--a":
-    about();
-    break;
-  case "menu":
-  case "options":
-  case "prompt":
-  case "--m":
-    menu();
-    break;
-  case "setup":
-    setup();
-    break;
+    case "get-tweets":
+    case "twitter":
+    case "my-tweets":
+    case "--t":
+      getTweets();
+      break;
+    case "get-song":
+    case "spotify-this-song":
+    case "spotify":
+    case "--s":
+      getSong(value);
+      break;
+    case "get-movie":
+    case "omdb":
+    case "movie-this":
+    case "--mv":
+      getMovie(value);
+      break;
+    case "random":
+    case "random-this":
+    case "do-what-it-says":
+    case "--r":
+      random();
+      break;
+    case "weather":
+    case "weather-this":
+    case "get-weather":
+    case "--w":
+      getWeather(value);
+      break;
+    case "set-timer":
+    case "--st":
+      setTimer(value);
+      break;
+    case "help":
+    case "--h":
+      help();
+      break;
+    case "about":
+    case "--a":
+      about();
+      break;
+    case "menu":
+    case "options":
+    case "prompt":
+    case "--m":
+      menu();
+      break;
 } // commands
 
 
@@ -95,11 +89,11 @@ switch(task){
 function getTweets(){
   logEntry("getTweets", null);
 
-  feed.get('statuses/user_timeline', userTwitter, function(err, tweets, response){
+  timeLine.get('statuses/user_timeline', userTwitter, function(err, tweets, response){
     if(err) {
       console.log("An error has occurred: " + err);
     } 
-    if ( response.statusCode === 200 ) {
+    if (response.statusCode === 200) {
       for(i = 0; i < tweets.length; i++){
         var text = tweets[i].text;
         var time = tweets[i].created_at;
@@ -115,7 +109,7 @@ function getTweets(){
 // ===================== Spotify ===============================
 function getSong(input){
   logEntry("getSong", input);
-  var valType = "track";
+  var queryType = "track";
   var song = input;
 
   if(input === "undefined undefined") {
@@ -123,7 +117,7 @@ function getSong(input){
     process.exit();
   }
 
-  spotify.search({ type:valType, query:song}, function(err, data){
+  spotify.search({ type:queryType, query:song}, function(err, data){
     if (err){
       log("An error has occurred: " + err);
     } else {
@@ -381,7 +375,7 @@ ${chalk.white("Type <node liri help> to see this list")}
 
 LIRI-BOT is an "intelligent assistant" that enables users to enter natural language 
 commands in order to perform several tasks including: spotify's song info, omdb's movies data, 
-check the weather, set a timer and retrieve your twitter feed.
+check the weather, set a timer and retrieve your most recent twitter's timeline.
 
 
 ${chalk.white("Commands:")}
