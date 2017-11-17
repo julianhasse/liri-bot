@@ -4,13 +4,24 @@
             ============================================
                          by Julian Hasse
 
-
+![Alt text](/images/img01.png?raw=true)
 
 * Type "node liri help" to see this list
 
 LIRI-BOT is an "intelligent assistant" that enables users to enter natural language 
 commands in order to perform several tasks including: spotify's song info, omdb's movies data, 
 check the weather, set a timer and retrieve your most recent twitter's timeline.
+
+![Alt text](/images/img02.png?raw=true)
+
+
+![Alt text](/images/img03.png?raw=true)
+ 
+
+![Alt text](/images/img04.png?raw=true)
+
+
+![Alt text](/images/img05.png?raw=true)
 
 
 * Commands:
